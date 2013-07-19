@@ -16,6 +16,7 @@ void inspect(Iterator first, Iterator last, Iterator pivot, int pass) {
     std::cerr << std::right << "^" << std::endl;
 }
 
+//Algorithm 1: uses std::stable_partition
 template<typename BidirectionalIterator>
 int quicksort(BidirectionalIterator first, BidirectionalIterator last, int pass=0) {
     typedef typename BidirectionalIterator::value_type value_type;
@@ -25,13 +26,14 @@ int quicksort(BidirectionalIterator first, BidirectionalIterator last, int pass=
     if (verbose)
 	std::cerr << "Pass " << pass << "-: " << streamifier(first, last) << std::endl;
 
-    //Actual algorithm. Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
+    //Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
     BidirectionalIterator pivot = std::stable_partition(first, last, std::bind2nd(std::less<value_type>(), *first));
 
     if (verbose) {
 	std::cerr << "Pass " << pass << "+: " << streamifier(first, last) << std::endl;
 	inspect(first,last,pivot,pass);
     }
+
     int pass1 = quicksort(first, pivot, pass+1);
     int pass2 = 0;
     if (pivot != last)
@@ -39,17 +41,21 @@ int quicksort(BidirectionalIterator first, BidirectionalIterator last, int pass=
     return std::max(pass1,pass2);
 }
 
+//Algorithm 2: uses std::partition
 template<typename BidirectionalIterator>
 int quicksort2(BidirectionalIterator first, BidirectionalIterator last, int pass=0) {
+    //Mostly just house keeping and inspection junk here
     typedef typename BidirectionalIterator::value_type value_type;
     if (first == last)
 	return pass;
 
     if (verbose)
 	std::cerr << "Pass " << pass << "-: " << streamifier(first, last) << std::endl;
+
+    //Actual algorithm starts here.
     value_type pivot_value = *first;
 
-    //Actual algorithm. Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
+    //Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
     BidirectionalIterator pivot = std::partition(first, last, std::bind2nd(std::less<value_type>(), pivot_value));
     //Since we are not using stable_partition we need to make sure the pivot value is at the pivot point
     BidirectionalIterator it = std::find(pivot,last,pivot_value);
