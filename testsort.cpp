@@ -18,8 +18,8 @@ bool quiet=false;
 
 int main(int argc, char* argv[]) {
     int opt, N=10;
-
-    while((opt = getopt(argc, argv, "vqn:N:")) != -1) {
+    int algorithm = 1;
+    while((opt = getopt(argc, argv, "vqn:N:a:")) != -1) {
 	switch(opt) {
 	case 'v':
 	    verbose = true; break;
@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
 	case 'n':
 	case 'N':
 	    N = atoi(optarg); break;
+        case 'a':
+            algorithm = atoi(optarg); break;
 	default:
 	    fprintf(stderr, "Usage: %s [-N size] [-v] [-q]\n",
 		    argv[0]);
@@ -41,7 +43,13 @@ int main(int argc, char* argv[]) {
 
     if (!quiet)
 	cout << "Initial Stuff: " << streamifier(stuff) << endl;
-    int passes = quicksort(stuff.begin(), stuff.end());
+    int passes = 0;
+    if (verbose)
+        cout << "Algorithm " << algorithm << std::endl;
+    if (algorithm == 1)
+        passes = quicksort(stuff.begin(), stuff.end());
+    else
+        passes = quicksort2(stuff.begin(), stuff.end());
     if (!quiet) {
 	cout << "Sorted Stuff: " << streamifier(stuff) << endl;
 	cout << "With " << passes << " passes" <<endl;

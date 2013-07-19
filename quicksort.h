@@ -39,4 +39,32 @@ int quicksort(BidirectionalIterator first, BidirectionalIterator last, int pass=
     return std::max(pass1,pass2);
 }
 
+template<typename BidirectionalIterator>
+int quicksort2(BidirectionalIterator first, BidirectionalIterator last, int pass=0) {
+    typedef typename BidirectionalIterator::value_type value_type;
+    if (first == last)
+	return pass;
+
+    if (verbose)
+	std::cerr << "Pass " << pass << "-: " << streamifier(first, last) << std::endl;
+    value_type pivot_value = *first;
+
+    //Actual algorithm. Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
+    BidirectionalIterator pivot = std::partition(first, last, std::bind2nd(std::less<value_type>(), pivot_value));
+    //Since we are not using stable_partition we need to make sure the pivot value is at the pivot point
+    BidirectionalIterator it = std::find(pivot,last,pivot_value);
+    std::iter_swap(it, pivot);
+
+    if (verbose) {
+	std::cerr << "Pass " << pass << "+: " << streamifier(first, last) << std::endl;
+	inspect(first,last,pivot,pass);
+    }
+    int pass1 = quicksort(first, pivot, pass+1);
+    int pass2 = 0;
+    if (pivot != last)
+	pass2 = quicksort(pivot+1, last, pass+1);
+    return std::max(pass1,pass2);
+}
+
+
 #endif
