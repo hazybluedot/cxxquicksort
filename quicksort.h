@@ -1,7 +1,6 @@
 #ifndef _QUICKSORT_H_
 #define _QUICKSORT_H_
 #include <iostream>
-#include <cstddef> //assert
 #include <algorithm> //partition
 #include <iterator> //distance, advance
 
@@ -25,7 +24,10 @@ int quicksort(BidirectionalIterator first, BidirectionalIterator last, int pass=
 
     if (verbose)
 	std::cerr << "Pass " << pass << "-: " << streamifier(first, last) << std::endl;
+
+    //Actual algorithm. Since the pivot value is somewhat arbitrary, we'll just use whatever value is at first
     BidirectionalIterator pivot = std::stable_partition(first, last, std::bind2nd(std::less<value_type>(), *first));
+
     if (verbose) {
 	std::cerr << "Pass " << pass << "+: " << streamifier(first, last) << std::endl;
 	inspect(first,last,pivot,pass);
