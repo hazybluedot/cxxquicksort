@@ -48,8 +48,13 @@ int main(int argc, char* argv[]) {
         cout << "Algorithm " << algorithm << std::endl;
     if (algorithm == 1)
         passes = quicksort(stuff.begin(), stuff.end());
-    else
+    else if (algorithm == 2)
         passes = quicksort2(stuff.begin(), stuff.end());
+    else if (algorithm == 3)
+        passes = quicksort3(stuff.begin(), stuff.end());
+    else
+        passes = quicksort4(stuff.begin(), stuff.end());
+
     if (!quiet) {
 	cout << "Sorted Stuff: " << streamifier(stuff) << endl;
 	cout << "With " << passes << " passes" <<endl;
